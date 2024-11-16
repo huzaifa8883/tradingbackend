@@ -10,8 +10,8 @@ dotenv.config({
 
 connectdb()
 .then(()=>{
-app.listen(process.env.Port||8000,()=>{
-  console.log(`server is running at ${process.env.Port}`)
+app.listen(8000,()=>{
+  console.log(`server is running at ${6000}`)
 })
 })
 .catch((err)=>{
