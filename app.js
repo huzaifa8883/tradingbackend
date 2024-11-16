@@ -3,8 +3,10 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 const app = express()
 
+const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 app.use(cors({
-    origin: 'https://7stardigitizing.com', // Allow requests from React app running on port 5173
+    origin: allowedOrigin,
     credentials: true
 }));
 
