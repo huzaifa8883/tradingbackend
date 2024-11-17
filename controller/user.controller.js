@@ -3,20 +3,23 @@ import { ApiError } from "../utils/apierror.js";
 import { User } from "../models/user.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 
-const generateAccessAndRefereshTokens = async (userId) => {
+
+const generateAccessAndRefereshTokens = async(userId) =>{
   try {
-    const user = await User.findById(userId);
-    const accessToken = user.generateaccesstoken();
-    const refreshToken = user.generaterefreshshtoken();
+      const user = await User.findById(userId)
+      const accessToken = user.generateaccesstoken()
+      const refreshToken = user.generaterefreshshtoken()
 
-    user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false });
+      user.refreshToken = refreshToken
+      await user.save({ validateBeforeSave: false })
 
-    return { accessToken, refreshToken };
+      return {accessToken, refreshToken}
+
+
   } catch (error) {
-    throw new ApiError(500, "Something went wrong while generating refresh and access token");
+      throw new ApiError(500, "Something went wrong while generating referesh and access token")
   }
-};
+}
 
 const registerUser = asyncHandler(async (req, res) => {
   const {
