@@ -9,7 +9,7 @@ const generateAccessAndRefereshTokens = async (userId) => {
     const accessToken = user.generateaccesstoken();
     const refreshToken = user.generaterefreshshtoken();
 
-    user.refershtoken = refreshToken;
+    user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
