@@ -6,6 +6,7 @@ import { User } from "../models/user.js";
 export const verifyJWT = asyncHandler(async(req, _, next) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
+        console.log("Authorization header: ", req.headers['authorization']);
 
         if (!token) {
             // Ensure you handle missing token scenario properly
