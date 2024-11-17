@@ -22,6 +22,9 @@ app.use(cookieParser())
 app.get('/debug', (req, res) => {
     res.json({ status: 'Running', time: new Date().toISOString() });
 });
+app.get('/', (req, res) => {
+    res.send('API is running!');
+});
 
 
 import userroutes from './routes/user.routes.js'
