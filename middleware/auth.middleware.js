@@ -7,7 +7,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
-
+console.log(token,"extracted")
     if (!token) {
       throw new ApiError(401, "Unauthorized request: Token not provided");
     }
