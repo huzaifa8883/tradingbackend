@@ -19,6 +19,9 @@ app.use(express.urlencoded({
 }))
 app.use(express.static("public"))
 app.use(cookieParser())
+app.get('/debug', (req, res) => {
+    res.json({ status: 'Running', time: new Date().toISOString() });
+});
 
 
 import userroutes from './routes/user.routes.js'
