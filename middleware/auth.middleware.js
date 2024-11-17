@@ -6,11 +6,13 @@ import { User } from "../models/user.js";
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
-console.log(token,"extracted")
-    if (!token) {
-      throw new ApiError(401, "Unauthorized request: Token not provided");
+
+    if (!authHeader) {
+      console.log("Authorization header is missing");
+      throw new ApiError(401, "Unauthorized request: No Authorization header provided");
     }
+    
+    const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
 
     // Verify JWT token
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);

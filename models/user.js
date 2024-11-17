@@ -87,26 +87,9 @@ userschema.methods.ispasswordcorrect = async function (password) {
 
 userschema.methods.generateaccesstoken = function () {
   return jwt.sign(
-    {
-      _id: this._id,
-      email: this.email,
-      username: this.username,  // Include username in the token
-      fullname: this.fullname,
-      phone: this.phone,  
-      company: this.company,
-      country: this.country,   // Include address data in the token
-      state: this.state,
-      postalCode: this.postalCode,
-      phoneExtension: this.phoneExtension,
-      city: this.city,
-      address: this.address,
-      address2: this.address2,
-     
-    },
+    { _id: this._id, email: this.email, username: this.username },
     process.env.ACCESS_TOKEN_SECRET,
-    {
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-    }
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
   );
 };
 
