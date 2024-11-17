@@ -68,6 +68,9 @@ const userschema = new mongoose.Schema(
       type: String,
       required: true,  // You can make it required based on your use case
     },
+    refershtoken:{
+      type:String
+     }
    
   },
   { timestamps: true }
