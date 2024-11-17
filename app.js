@@ -9,7 +9,7 @@ const corsOptions = {
     origin: 'https://7stardigitizing.com',  // Specify your frontend URL
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
+    withCredentials: true,
   };
   
   app.use(cors(corsOptions));
