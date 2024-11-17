@@ -1,21 +1,21 @@
-import dotenv from 'dotenv'
-
-import connectdb from "./db/index.js";
+import dotenv from 'dotenv';
+import connectdb from './db/index.js';
 import { app } from './app.js';
 
+// Load environment variables
 dotenv.config({
-    path: "./.env"
-})
+    path: './.env'
+});
 
-
+// Connect to MongoDB and start the server
 connectdb()
-.then(()=>{
-app.listen(8000,()=>{
-  console.log(`server is running at ${6000}`)
-})
-})
-.catch((err)=>{
-console.log("mongodb connection failed",err)
-})
-
-
+    .then(() => {
+        // Use Railway's PORT or fallback to 8000 for local testing
+        const PORT = process.env.PORT || 8000;
+        app.listen(PORT, () => {
+            console.log(`Server is running at port ${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.log('MongoDB connection failed:', err);
+    });
