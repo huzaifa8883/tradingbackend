@@ -5,12 +5,14 @@ import { User } from "../models/user.js";
 
 export const verifyJWT = asyncHandler(async(req, _, next) => {
     try {
-        const token = req.cookies.accessToken
-      
+         const token = req.cookies?.accessToken
+        //  || req.header("Authorization")?.replace("Bearer ", "")
+        
+console.log("Extracted Token:",token);
 
+         console.log(token);
         if (!token) {
-            // Ensure you handle missing token scenario properly
-            throw new ApiError(401, "Authorization token must be provided");
+            throw new ApiError(401, "Unauthorized request")
         }
 
         // Verify JWT token
