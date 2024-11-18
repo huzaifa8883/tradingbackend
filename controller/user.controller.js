@@ -6,18 +6,25 @@ import { ApiResponse } from "../utils/apiresponse.js";
 
 const generateAccessAndRefereshTokens = async(userId) =>{
   try {
-      const user = await User.findById(userId)
-      const accessToken = user.generateaccesstoken()
-      const refreshToken = user.generaterefreshshtoken()
+    // Fetch user from the database
+    const user = await User.findById(userId);
 
-      user.refreshToken = refreshToken
-      await user.save({ validateBeforeSave: false })
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
 
-      return {accessToken, refreshToken}
+    // Generate access and refresh tokens
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
 
+    // Save refresh token in the database
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
 
+    return { accessToken, refreshToken };
   } catch (error) {
-      throw new ApiError(500, "Something went wrong while generating referesh and access token")
+    console.error("Token Generation Error:", error.message);
+    throw new ApiError(500, error.message || "Error while generating tokens");
   }
 }
 
@@ -161,10 +168,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 const userStatus = asyncHandler(async (req, res) => {
     // Assuming the user is already authenticated based on access token in cookies
     const userId = req.user._id; // user info should be available via middleware
-    
-    if (!userId) {
-      throw new ApiError(401, "User not authenticated");
-    }
+ 
   
     // Find the user by ID
     const user = await User.findById(userId).select("-password -refreshToken");
