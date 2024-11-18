@@ -14,7 +14,7 @@ const router = Router();
 router.route("/signup").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/status").get( userStatus);
+router.route("/status").get(verifyJWT, userStatus);
 router.route("/getuser/:userId").get(verifyJWT, getUserDetails); // Correct route for fetching user details
 router.route("/getalluser").get( getAllUsers);
 router.route("/createorder").post(verifyJWT, createOrder);
