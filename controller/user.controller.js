@@ -119,10 +119,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    // sameSite: "strict",
-    secure:true
+    secure: process.env.NODE_ENV === "production", // Secure only in production
+    sameSite: "strict",
   };
+  
 
   return res
     .status(200)
