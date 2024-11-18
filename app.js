@@ -3,16 +3,20 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 const app = express()
 
-// const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-// const corsOptions = {
-//     origin: 'https://7stardigitizing.com',  // Specify your frontend URL
-//     methods: ['GET', 'POST'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//     Credentials: true,
-//   };
+app.use(cookieParser())
+
+
+
+const corsOptions = {
+    origin: 'https://7stardigitizing.com',  // Specify your frontend URL
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Correct casing
+};
+
   
-  app.use(cors());
+  app.use(cors(corsOptions));
   
 app.use(express.json({limit:"16kb"}))
 
@@ -22,7 +26,7 @@ app.use(express.urlencoded({
 
 }))
 app.use(express.static("public"))
-app.use(cookieParser())
+
 app.get('/debug', (req, res) => {
     res.json({ status: 'Running', time: new Date().toISOString() });
 });
