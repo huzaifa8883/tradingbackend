@@ -5,15 +5,13 @@ import { User } from "../models/user.js";
 
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
-    // Extract token from cookies or Authorization header
-    const token = req.cookies.accessToken || req.headers.authorization?.split(" ")[1];
+    const token = req.cookies.accessToken ||    req.header("Authorization")?.replace("Bearer ", "")
 
-    console.log("Extracted Token:", token);  // Log the token to debug
+console.log("Extracted Token:", token);
 
-    if (!token) {
-      throw new ApiError(407, "Unauthorized request");
-    }
-
+if (!token) {
+  throw new ApiError(407, "Unauthorized request");
+}
     // Verify the token
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
