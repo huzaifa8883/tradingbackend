@@ -3,8 +3,10 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.js";
 
+
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
+    console.log("Cookies:", req.cookies);
     const token = req.cookies.accessToken// Get token after 'Bearer '
 
 
