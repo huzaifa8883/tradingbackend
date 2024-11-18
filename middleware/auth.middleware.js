@@ -3,38 +3,50 @@ import { ApiError } from "../utils/apierror.js";
 import { asyncHandler } from "../utils/asynchandler.js";
 import { User } from "../models/user.js";
 
+const extractToken = (authHeader) => {
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.split(" ")[1];
+  }
+  return null;
+};
+
 export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-      console.log("Authorization header is missing");
-      throw new ApiError(401, "Unauthorized request: No Authorization header provided");
+      throw new ApiError(401, "Missing Authorization header");
     }
-    
-    const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+
+    const token = extractToken(authHeader);
+
+    if (!token) {
+      throw new ApiError(401, "Invalid Authorization header format");
+    }
 
     // Verify JWT token
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    // Find user by decoded token ID
-    const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
+    let user;
+    try {
+      user = await User.findById(decodedToken?._id).select("-password -refreshToken");
+    } catch (err) {
+      throw new ApiError(500, "Internal Server Error: Unable to fetch user");
+    }
 
     if (!user) {
       throw new ApiError(401, "Invalid Access Token: User not found");
     }
 
-    // Attach user to the request object for use in later middleware or route handlers
+    // Attach user to request
     req.user = user;
 
     next();
   } catch (error) {
-    // Suppress console logs except in debug mode
     if (process.env.NODE_ENV === "development") {
       console.error("Authentication Error:", error.message);
     }
 
-    // Handle specific JWT errors
     if (error instanceof jwt.JsonWebTokenError) {
       throw new ApiError(401, "Invalid or expired token");
     }
@@ -43,7 +55,6 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
       throw new ApiError(401, "Token has expired");
     }
 
-    // General error handling
     throw new ApiError(401, "Unauthorized request");
   }
 });
