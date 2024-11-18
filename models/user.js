@@ -85,11 +85,11 @@ userschema.methods.ispasswordcorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateAccessToken = function () {
+userschema.methods.generateAccessToken = function () {
   return jwt.sign({ _id: this._id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 };
 
-userSchema.methods.generateRefreshToken = function () {
+userschema.methods.generateRefreshToken = function () {
   return jwt.sign({ _id: this._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 };
 export const User = mongoose.model("User", userschema);
