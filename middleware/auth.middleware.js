@@ -7,8 +7,8 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
   try {
     // Extract token from cookies or Authorization header
     const token = 
-      req.cookies?.accessToken || 
-      req.header("Authorization")?.replace("Bearer ", "");
+      req.cookies.accessToken
+     
 
     console.log("Extracted Token:", token);
 
