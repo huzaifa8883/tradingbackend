@@ -5,14 +5,14 @@ const app = express()
 
 // const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-const corsOptions = {
-    origin: 'https://7stardigitizing.com',  // Specify your frontend URL
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    Credentials: true,
-  };
+// const corsOptions = {
+//     origin: 'https://7stardigitizing.com',  // Specify your frontend URL
+//     methods: ['GET', 'POST'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     Credentials: true,
+//   };
   
-  app.use(cors(corsOptions));
+  app.use(cors());
   
 app.use(express.json({limit:"16kb"}))
 

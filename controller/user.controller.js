@@ -51,9 +51,9 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  if (!/\S+@\S+\.\S+/.test(email)) {
-    throw new ApiError(400, "Valid email is required");
-  }
+  // if (!/\S+@\S+\.\S+/.test(email)) {
+  //   throw new ApiError(400, "Valid email is required");
+  // }
 
   const existedUser = await User.findOne({
     $or: [{ email: email || null }, { username: username || null }]
@@ -119,8 +119,9 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    // secure: process.env.NODE_ENV === "production",
+    // sameSite: "strict",
+    secure:true
   };
 
   return res
