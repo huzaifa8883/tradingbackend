@@ -4,6 +4,10 @@ import { User } from "../models/user.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 
 
+
+
+
+
 const generateAccessAndRefereshTokens = async(userId) =>{
   try {
     // Fetch user from the database
@@ -118,10 +122,11 @@ const loginUser = asyncHandler(async (req, res) => {
   const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
 
   const options = {
-    httpOnly: true, 
-    secure: false, // Ensures HTTPS in production
-   sameSite: 'None',
-  };
+    httpOnly: true,
+ secure: process.env.NODE_ENV === "production",
+ sameSite: "strict",
+ maxAge: 24 * 60 * 60 * 1000,
+};
   
 
   return res
