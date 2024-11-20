@@ -1,6 +1,6 @@
 // routes/user.routes.js
 import { Router } from "express";
-import { loginUser, registerUser, logoutUser, userStatus, getUserDetails, getAllUsers } from "../controller/user.controller.js";
+import { loginUser, registerUser, logoutUser, userStatus, getUserDetails, getAllUsers,forgotPassword } from "../controller/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import { createOrder, getAllOrders, getCompletedOrders, getUserOrders,sendFilesAndCompleteOrder,updatePaymentStatus} from "../controller/order.controller.js";
 import { Order } from "../models/order.js";
@@ -28,13 +28,14 @@ router.route('/orders/:orderId/complete').put(sendFilesAndCompleteOrder)
 
    // Correct route for fetching order details
 
-   router.route("/createvector").post( createvector);
+   router.route("/createvector").post(verifyJWT, createvector);
 router.route("/allvector").get( getAllvectors);
 
 router.route("/getvector").get( verifyJWT,getUservectors);
 
 router.route('/vectors/:vectorId/complete').put(sendFilesAndCompletevector)
-router.put('/orders/:orderId/payment-status', updatePaymentStatus);
-router.put('/vectors/:vectorId/payment-status', updatePaymentStatusvector);
+router.put('/orders/:orderId/payment-status', verifyJWT,updatePaymentStatus);
+router.put('/vectors/:vectorId/payment-status',verifyJWT, updatePaymentStatusvector);
+router.post("/forgot-password",forgotPassword)
 
 export default router;

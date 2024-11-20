@@ -2,7 +2,8 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apierror.js";
 import { User } from "../models/user.js";
 import { ApiResponse } from "../utils/apiresponse.js";
-
+import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 
 
@@ -226,8 +227,70 @@ const getAllUsers = asyncHandler(async (req, res) => {
     );
   });
   
+  const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
   
+    // Validate email
+    if (!email) {
+      throw new ApiError(400, "Email is required");
+    }
+  
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+  
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save({ validateBeforeSave: false });
+  
+    // Reset URL (adjust the frontend route accordingly)
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+  
+    // Email options
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Request",
+      html: `<p>You requested a password reset. Click the link below to reset your password:</p>
+             <a href="${resetUrl}">${resetUrl}</a>
+             <p>If you did not request this, please ignore this email.</p>`,
+    };
+  
+    // Send email
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // Or your preferred email provider
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+  
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          null,
+          "Password reset email sent successfully"
+        )
+      );
+    } catch (error) {
+      console.error("Error sending email:", error);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+  
+      throw new ApiError(500, "Error sending email. Try again later");
+    }
+  });
 
-export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails };
+export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails,forgotPassword };
 
 
