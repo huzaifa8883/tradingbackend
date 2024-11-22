@@ -8,7 +8,7 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 import { createvector, getAllvectors, getCompletedvectors, getUservectors, sendFilesAndCompletevector, updatePaymentStatusvector } from "../controller/vector.controller.js";
-import { resolveConfig } from "vite";
+
 
 const router = Router();
 
