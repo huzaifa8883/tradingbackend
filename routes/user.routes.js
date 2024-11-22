@@ -20,8 +20,8 @@ router.route("/getuser/:userId").get(verifyJWT, getUserDetails); // Correct rout
 router.route("/getalluser").get( getAllUsers);
 router.route("/createorder").post(verifyJWT, createOrder);
 router.route("/allorders").get( getAllOrders);
-router.route("/getcompleted").get(getCompletedOrders);
-router.route("/getcompletedd").get(getCompletedvectors);
+router.route("/getcompleted").get(verifyJWT,getCompletedOrders);
+router.route("/getcompletedd").get(verifyJWT,getCompletedvectors);
 router.route("/getorder").get( verifyJWT,getUserOrders);
 
 router.route('/orders/:orderId/complete').put(sendFilesAndCompleteOrder)
