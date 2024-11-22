@@ -290,7 +290,35 @@ const getAllUsers = asyncHandler(async (req, res) => {
       throw new ApiError(500, "Error sending email. Try again later");
     }
   });
-
-export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails,forgotPassword };
+  const resetPassword = asyncHandler(async (req, res) => {
+    const { token, newPassword } = req.body;
+  
+    if (!token || !newPassword) {
+      throw new ApiError(400, "Token and new password are required");
+    }
+  
+    // Hash the provided token to compare with the database
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  
+    // Find user by the hashed token and ensure token has not expired
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }, // Check expiration
+    });
+  
+    if (!user) {
+      throw new ApiError(400, "Invalid or expired token");
+    }
+  
+    // Update password
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+  
+    res.status(200).json(new ApiResponse(200, null, "Password reset successful"));
+  });
+  
+export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails,forgotPassword,resetPassword };
 
 

@@ -1,6 +1,6 @@
 // routes/user.routes.js
 import { Router } from "express";
-import { loginUser, registerUser, logoutUser, userStatus, getUserDetails, getAllUsers,forgotPassword } from "../controller/user.controller.js";
+import { loginUser, registerUser, logoutUser, userStatus, getUserDetails, getAllUsers,forgotPassword, resetPassword } from "../controller/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 import { createOrder, getAllOrders, getCompletedOrders, getUserOrders,sendFilesAndCompleteOrder,updatePaymentStatus} from "../controller/order.controller.js";
 import { Order } from "../models/order.js";
@@ -8,6 +8,7 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
 import { createvector, getAllvectors, getCompletedvectors, getUservectors, sendFilesAndCompletevector, updatePaymentStatusvector } from "../controller/vector.controller.js";
+import { resolveConfig } from "vite";
 
 const router = Router();
 
@@ -37,5 +38,7 @@ router.route('/vectors/:vectorId/complete').put(sendFilesAndCompletevector)
 router.put('/orders/:orderId/payment-status', verifyJWT,updatePaymentStatus);
 router.put('/vectors/:vectorId/payment-status',verifyJWT, updatePaymentStatusvector);
 router.post("/forgot-password",forgotPassword)
+router.post("/reset-password", resetPassword);
+
 
 export default router;
