@@ -24,7 +24,7 @@ router.route("/getcompleted").get(getCompletedOrders);
 router.route("/getcompletedd").get(getCompletedvectors);
 router.route("/getorder").get( verifyJWT,getUserOrders);
 
-router.route('/orders/:orderId/complete').put(sendFilesAndCompleteOrder)
+
 // Get order(s) for a specific user
 
    // Correct route for fetching order details
@@ -35,6 +35,7 @@ router.route("/allvector").get( getAllvectors);
 router.route("/getvector").get( verifyJWT,getUservectors);
 
 router.route('/vectors/:vectorId/complete').put(sendFilesAndCompletevector)
+router.route('/orders/:orderId/complete').put(sendFilesAndCompleteOrder)
 router.put('/orders/:orderId/payment-status', verifyJWT,updatePaymentStatus);
 router.put('/vectors/:vectorId/payment-status',verifyJWT, updatePaymentStatusvector);
 router.post("/forgot-password",forgotPassword)
