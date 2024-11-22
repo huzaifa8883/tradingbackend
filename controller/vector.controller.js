@@ -79,8 +79,8 @@ const getUservectors = asyncHandler(async (req, res) => {
 
   // If no orders are found for the user, return an empty array
   if (orders.length === 0) {
-    return res.status(404).json(
-      new ApiResponse(404, [], "No orders found for this user")
+    return res.status(200).json(
+      new ApiResponse(200, [], "No orders found for this user")
     );
   }
 
@@ -110,12 +110,7 @@ const getCompletedvectors = asyncHandler(async (req, res) => {
   // Retrieve all orders from the database where status is 'Completed'
   const completedvectors = await vector.find({ status: "Completed" });
 
-  // If no completed orders are found, return an empty array
-  // if (completedvectors.length === 0) {
-  //   return res.status(404).json(
-  //     new ApiResponse(404, [], "No completed orders found")
-  //   );
-  // }
+  
 
   return res.status(200).json(
     new ApiResponse(200, completedvectors, "All completed orders retrieved successfully")

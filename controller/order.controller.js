@@ -99,10 +99,11 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
   // If no orders are found, return an empty array
   if (orders.length === 0) {
-    return res.status(404).json(
-      new ApiResponse(404, [], "No pending orders found")
+    return res.status(200).json(
+      new ApiResponse(200, [], "No orders found for this user")
     );
   }
+  
 
   return res.status(200).json(
     new ApiResponse(200, orders, "All pending orders retrieved successfully")
