@@ -113,7 +113,7 @@ const getCompletedOrders = asyncHandler(async (req, res) => {
   // Retrieve all orders from the database where status is 'Completed'
   const completedOrders = await Order.find({ status: "Completed" });
 
-  // If no completed orders are found, return an empty array
+  
   
 
   return res.status(200).json(
@@ -127,9 +127,7 @@ const sendFilesAndCompleteOrder = asyncHandler(async (req, res) => {
 
   // Find the order by ID
   const order = await Order.findById(orderId);
-  if (!order) {
-    return res.status(404).json(new ApiResponse(404, null, "Order not found"));
-  }
+  
 
   // Check if userFiles is already an array; if not, initialize it as an array
   order.userFiles = Array.isArray(order.userFiles) ? order.userFiles : [];
