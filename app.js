@@ -10,7 +10,7 @@ app.use(cookieParser())
 
 const corsOptions = {
     origin: 'https://7stardigitizing.com',  // Specify your frontend URL
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST','PUT'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Correct casing
 };

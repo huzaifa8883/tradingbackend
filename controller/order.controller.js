@@ -114,11 +114,7 @@ const getCompletedOrders = asyncHandler(async (req, res) => {
   const completedOrders = await Order.find({ status: "Completed" });
 
   // If no completed orders are found, return an empty array
-  if (completedOrders.length === 0) {
-    return res.status(404).json(
-      new ApiResponse(404, [], "No completed orders found")
-    );
-  }
+  
 
   return res.status(200).json(
     new ApiResponse(200, completedOrders, "All completed orders retrieved successfully")
