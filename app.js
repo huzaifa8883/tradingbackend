@@ -1,6 +1,7 @@
 import express, { urlencoded } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+// import withdraw from "../models/withdraw.js"
 const app = express()
 
 
@@ -9,11 +10,14 @@ app.use(cookieParser())
 
 
 const corsOptions = {
-    origin: 'https://7stardigitizing.com',  // Specify your frontend URL
-    methods: ['GET', 'POST','PUT'],
+    origin: 'http://localhost:5173', // Your frontend's URL
+    methods: ['GET', 'POST', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Correct casing
-};
+    credentials: true,  // Allow credentials (cookies, tokens)
+  };
+  
+  app.use(cors(corsOptions));
+  
 
   
   app.use(cors(corsOptions));

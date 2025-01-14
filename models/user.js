@@ -31,45 +31,20 @@ const userschema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-    phone: {   
+    withdrawpin: {   
       type: String,
       required: true,  
     },
-    company: {  
-      type: String,
-      required: true,  
-    },
+    
     // Added address-related fields
-    country: {
-      type: String,
-      required: true,  // You can make it required based on your use case
-    },
-    state: {
-      type: String,
-      required: true,  // You can make it required based on your use case
-    },
-    postalCode: {
-      type: String,
-      required: true,  // You can make it required based on your use case
-    },
-    phoneExtension: {
-      type: String,
-      required: false,  // Optional
-    },
-    city: {
-      type: String,
-      required: true,  // You can make it required based on your use case
-    },
-    address: {
-      type: String,
-      required: true,  // You can make it required based on your use case
-    },
-    address2: {
-      type: String,
-      required: true,  // You can make it required based on your use case
-    },
+    
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
+    deposit: {
+      usdt: { type: Number, default: 0 }, // Default deposit in USDT
+      trx: { type: Number, default: 0 }, // Default deposit in TRX
+    },
+   
    
   },
   { timestamps: true }
@@ -93,18 +68,10 @@ userschema.methods.generateAccessToken = function () {
       username: this.username,
       fullname: this.fullname,
       email: this.email,
-      company: this.company,
-      phone: this.phone,
-      country: this.country,
-      state: this.state,
-      postalCode: this.postalCode,
-      phoneExtension: this.phoneExtension,
-      city: this.city,
-      address: this.address,
-      address2: this.address2,
+    withdrawpin:this.withdrawpin
     },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: "15m" }
+     { expiresIn: "1h" }
   );
 };
 
@@ -115,6 +82,26 @@ userschema.methods.generateRefreshToken = function () {
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: "7d" }
   );
+};
+userschema.methods.updateDeposit = async function (currency, amount) {
+  if (currency === "usdt") {
+    // Check if deduction is valid
+    if (amount < 0 && this.deposit.usdt < Math.abs(amount)) {
+      throw new Error("Insufficient USDT balance");
+    }
+    this.deposit.usdt += amount;
+  } else if (currency === "trx") {
+    // Check if deduction is valid
+    if (amount < 0 && this.deposit.trx < Math.abs(amount)) {
+      throw new Error("Insufficient TRX balance");
+    }
+    this.deposit.trx += amount;
+  } else {
+    throw new Error("Unsupported currency");
+  }
+
+  // Save changes to the database
+  await this.save();
 };
 
 export const User = mongoose.model("User", userschema);
