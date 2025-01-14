@@ -10,7 +10,7 @@ app.use(cookieParser())
 
 
 const corsOptions = {
-    origin: 'https://gaintpro.com', // Your frontend's URL
+    origin: process.env.FRONTEND_URL, // Your frontend's URL
     methods: ['GET', 'POST', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,  // Allow credentials (cookies, tokens)
