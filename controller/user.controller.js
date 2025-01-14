@@ -115,9 +115,9 @@ const loginUser = asyncHandler(async (req, res) => {
   // Cookie options
   const options = {
     httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    // sameSite: "none",
-    // maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
   };
 
   // Set cookies and respond with user details and tokens
