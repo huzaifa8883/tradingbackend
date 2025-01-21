@@ -423,6 +423,36 @@ const getAllUsers = asyncHandler(async (req, res) => {
   
     return res.status(200).json(new ApiResponse(200, withdrawals, "All withdrawal requests retrieved successfully"));
   });
-export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails,forgotPassword,resetPassword,getUserDeposit,createWithdrawalRequest,getWithdrawalRequest,getAllWithdrawals };
+  const changePassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+  
+    // Ensure both fields are provided
+    if (!oldPassword || !newPassword) {
+      throw new ApiError(400, "Old password and new password are required");
+    }
+  
+    // Find the user based on the authenticated user's ID
+    const user = await User.findById(req.user._id);
+  
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+  
+    // Verify the old password
+    const isPasswordValid = await user.ispasswordcorrect(oldPassword); // Replace with the correct password validation method
+    if (!isPasswordValid) {
+      throw new ApiError(401, "Old password is incorrect");
+    }
+  
+    // Update the password
+    user.password = newPassword;
+    await user.save();
+  
+    return res.status(200).json(
+      new ApiResponse(200, null, "Password changed successfully")
+    );
+  });
+  
+export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails,forgotPassword,resetPassword,getUserDeposit,createWithdrawalRequest,getWithdrawalRequest,getAllWithdrawals,changePassword };
 
 

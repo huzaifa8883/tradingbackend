@@ -1,6 +1,6 @@
 // routes/user.routes.js
 import { Router } from "express";
-import { loginUser, registerUser, logoutUser, userStatus, getUserDetails, getAllUsers ,forgotPassword, resetPassword, updateDeposit, getUserDeposit, createWithdrawalRequest, getAllWithdrawals } from "../controller/user.controller.js";
+import { loginUser, registerUser, logoutUser, userStatus, getUserDetails, getAllUsers ,forgotPassword, resetPassword, updateDeposit, getUserDeposit, createWithdrawalRequest, getAllWithdrawals ,changePassword} from "../controller/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 
@@ -16,6 +16,7 @@ router.route("/updatedeposit").post(updateDeposit)
 router.route("/userdeposit").get(verifyJWT,getUserDeposit)
 router.route("/createwithdraw").post(verifyJWT,createWithdrawalRequest )
 router.route("/allwithdrawls").get(getAllWithdrawals)
+router.route("/updatepassword").put(verifyJWT,changePassword)
 
 
 // Get order(s) for a specific user
