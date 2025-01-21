@@ -452,6 +452,37 @@ const getAllUsers = asyncHandler(async (req, res) => {
       new ApiResponse(200, null, "Password changed successfully")
     );
   });
+  export const updateWithdrawPin = asyncHandler(async (req, res) => {
+    const { userId, newWithdrawPin } = req.body;
+  
+    // Validate inputs
+    if (!userId || !newWithdrawPin) {
+      throw new ApiError(400, "User ID and new withdraw pin are required");
+    }
+  
+    // Validate that the userId is a valid ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw new ApiError(400, "Invalid userId format");
+    }
+  
+    // Convert userId to ObjectId
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+  
+    // Find the user
+    const user = await User.findById(userObjectId);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+  
+    // Update the withdraw pin
+    user. withdrawPin = newWithdrawPin;
+    await user.save({ validateBeforeSave: false });
+  
+    return res.status(200).json(
+      new ApiResponse(200, null, "Withdraw pin updated successfully")
+    );
+  });
+  
   
 export { registerUser, loginUser, logoutUser,userStatus,getAllUsers,getUserDetails,forgotPassword,resetPassword,getUserDeposit,createWithdrawalRequest,getWithdrawalRequest,getAllWithdrawals,changePassword };
 
