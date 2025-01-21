@@ -31,13 +31,62 @@ app.use(express.urlencoded({
 }))
 app.use(express.static("public"))
 
-app.get('/debug', (req, res) => {
-    res.json({ status: 'Running', time: new Date().toISOString() });
-});
+
 app.get('/', (req, res) => {
     res.send('API is running!');
 });
 
+let timer = 60; // Timer starts at 60 seconds
+let baseTime = Date.now(); // Base time for incremental orders
+let orders = []; // Orders array
+const getRandomAdSequence = () => {
+    const adTypes = ["Single", "Double"];
+    const isBig = Math.random() > 0.5;
+    const mainAd = isBig ? "Big" : "Small";
+    const randomAdType = adTypes[Math.floor(Math.random() * adTypes.length)];
+    return [`${mainAd}`, `${randomAdType}`, `${mainAd} ${randomAdType}`];
+  };
+  
+  // Function to create a random order
+  const createRandomOrder = (id) => {
+    const orderTime = new Date(baseTime).toLocaleTimeString();
+    baseTime += 60 * 1000; // Increment base time by 1 minute
+    return {
+      id,
+      orderNumber: Math.floor(Math.random() * 10000000000000),
+      amount: Math.floor(Math.random() * (91000 - 92000 + 1)) + 92000,
+      adTypes: getRandomAdSequence(),
+      time: orderTime,
+    };
+  };
+  
+  // Initialize orders (first-time setup)
+  const initializeOrders = () => {
+    for (let i = 1; i <= 3; i++) {
+      orders.push(createRandomOrder(i));
+    }
+  };
+  initializeOrders(); // Initialize orders when the server starts
+  
+  // Timer logic (runs every second)
+  setInterval(() => {
+    if (timer === 0) {
+      const newOrder = createRandomOrder(orders.length + 1);
+      orders.unshift(newOrder); // Add new order at the start
+      timer = 60; // Reset timer
+    } else {
+      timer -= 1; // Decrement timer
+    }
+  }, 1000);
+  
+  // API Route: Get current timer and orders
+  app.get("/api/status", (req, res) => {
+    res.json({
+      timer,
+      orders,
+    });
+  });
+  
 
 import userroutes from './routes/user.routes.js'
 app.use("/api/auth",userroutes)
