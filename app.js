@@ -86,19 +86,26 @@ const getRandomAdSequence = () => {
       orders,
     });
   });
-  
+  let startTime = Math.floor(Date.now() / 1000);
+
   app.get("/timer", (req, res) => {
     const currentTime = Math.floor(Date.now() / 1000);
     const elapsedTime = currentTime - startTime;
-    const remainingTime = Math.max(60 - elapsedTime, 0);
+    let remainingTime = 60 - elapsedTime;
+  
+    if (remainingTime <= 0) {
+      startTime = Math.floor(Date.now() / 1000); // Timer reset karega
+      remainingTime = 60;
+    }
+  
     res.json({ remainingTime });
   });
   
-  // Reset timer
   app.post("/reset-timer", (req, res) => {
     startTime = Math.floor(Date.now() / 1000);
     res.json({ message: "Timer reset", startTime });
   });
+  
 import userroutes from './routes/user.routes.js'
 app.use("/api/auth",userroutes)
 export {app}
