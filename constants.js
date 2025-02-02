@@ -1,1 +1,1 @@
-export const dbname = "trading"
+export const dbname = "1xbet"

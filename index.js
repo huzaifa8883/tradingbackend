@@ -11,7 +11,7 @@ dotenv.config({
 connectdb()
     .then(() => {
         // Use Railway's PORT or fallback to 8000 for local testing
-        const PORT = process.env.PORT || 8080;
+        const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`Server is running at port ${PORT}`);
         });

@@ -31,19 +31,13 @@ const userschema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-    withdrawpin: {   
-      type: String,
-      required: true,  
-    },
-    
+  phonenumber:{
+    type: Number,
+    required: true,
+  },
     // Added address-related fields
     
-    resetPasswordToken: { type: String },
-    resetPasswordExpires: { type: Date },
-    deposit: {
-      usdt: { type: Number, default: 0 }, // Default deposit in USDT
-      trx: { type: Number, default: 0 }, // Default deposit in TRX
-    },
+   
    
    
   },
@@ -82,26 +76,6 @@ userschema.methods.generateRefreshToken = function () {
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: "7d" }
   );
-};
-userschema.methods.updateDeposit = async function (currency, amount) {
-  if (currency === "usdt") {
-    // Check if deduction is valid
-    if (amount < 0 && this.deposit.usdt < Math.abs(amount)) {
-      throw new Error("Insufficient USDT balance");
-    }
-    this.deposit.usdt += amount;
-  } else if (currency === "trx") {
-    // Check if deduction is valid
-    if (amount < 0 && this.deposit.trx < Math.abs(amount)) {
-      throw new Error("Insufficient TRX balance");
-    }
-    this.deposit.trx += amount;
-  } else {
-    throw new Error("Unsupported currency");
-  }
-
-  // Save changes to the database
-  await this.save();
 };
 
 export const User = mongoose.model("User", userschema);
