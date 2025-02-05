@@ -15,7 +15,8 @@ const userschema = new mongoose.Schema(
     username: {  // Added username field
       type: String,
       required: true,
-     
+      lowercase: true,  
+
       trim: true,
     },
     fullname: {
@@ -31,7 +32,7 @@ const userschema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-  phonenumber:{
+    withdrawpin:{
     type: Number,
     required: true,
   },

@@ -39,20 +39,14 @@ const registerUser = asyncHandler(async (req, res) => {
     username,
     fullname,
     email,
-  phonenumber,
+    withdrawpin,  // Updated from phonenumber to withdrawpin
     password,
-   
-    
   } = req.body;
 
   // Validate required fields
-  if (![username, fullname, email, phonenumber, password,].some(field => field?.trim() !== "")) {
+  if (![username, fullname, email, withdrawpin, password].some(field => field?.trim() !== "")) {
     throw new ApiError(400, "All fields are required");
   }
-
-  // if (!/\S+@\S+\.\S+/.test(email)) {
-  //   throw new ApiError(400, "Valid email is required");
-  // }
 
   const existedUser = await User.findOne({
     $or: [{ email: email || null }]
@@ -65,12 +59,9 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     username,
     fullname,
-   
-    phonenumber,
+    withdrawpin, // Updated from phonenumber to withdrawpin
     email,
     password,
-  
-   
   });
 
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
@@ -94,7 +85,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // Find user by username
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username: username.toLowerCase() });
 
   if (!user) {
     throw new ApiError(404, "User does not exist");
