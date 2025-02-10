@@ -1,6 +1,7 @@
 import express, { urlencoded } from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import mongoose from 'mongoose'
 // import withdraw from "../models/withdraw.js"
 const app = express()
 
@@ -105,7 +106,40 @@ const getRandomAdSequence = () => {
     startTime = Math.floor(Date.now() / 1000);
     res.json({ message: "Timer reset", startTime });
   });
+
+  const orderSchema = new mongoose.Schema({
+    id: String,
+    orderNumber: Number,
+    amount: Number,
+    adTypes: [String],
+    time: String,
+    rawTime: String,
+  });
+  
+  const Order = mongoose.model("Order", orderSchema);
+  
+  // API to Save Order
+  app.post("/api/orders", async (req, res) => {
+    try {
+      const newOrder = new Order(req.body);
+      await newOrder.save();
+      res.status(201).json({ message: "Order saved", order: newOrder });
+    } catch (error) {
+      res.status(500).json({ error: "Error saving order" });
+    }
+  });
+  
+  // API to Get All Orders
+  app.get("/api/orders", async (req, res) => {
+    try {
+      const orders = await Order.find().sort({ _id: -1 }); // 🔥 Latest order first
+      res.json(orders);
+    } catch (error) {
+      res.status(500).json({ error: "Error fetching orders" });
+    }
+  });
   
 import userroutes from './routes/user.routes.js'
 app.use("/api/auth",userroutes)
 export {app}
+
